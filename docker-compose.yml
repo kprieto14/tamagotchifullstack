@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      context: ./Backend  # Path to your backend directory
+      dockerfile: Dockerfile  # Dockerfile used to build the backend
+    container_name: digitalpetsbackend
+    ports:
+      - "5000:5000"  # Map host port 5000 to container port 5000
+    environment:
+      - PYTHONUNBUFFERED=1 
+      - CHOKIDAR_USEPOLLING=true # Enable polling for file watching in container
+      - DEV_MODE=true 
+    volumes:
+    - .:/usr/src/app    # Mount backend directory to /app in container for live reloading

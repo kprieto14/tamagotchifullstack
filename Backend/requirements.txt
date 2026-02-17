@@ -1,0 +1,15 @@
+flask
+flask-smorest
+flask-jwt-extended
+python-jose
+python-dotenv
+marshmallow
+SQLAlchemy
+Flask-SQLAlchemy
+psycopg2-binary
+passlib
+flask-cors
+Flask-Migrate
+pytz
+pytest
+pytest-flask
