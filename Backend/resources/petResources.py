@@ -7,15 +7,14 @@ from models.Breed import BreedsModel
 from models.Interaction import InteractionsModel
 from models.Pet import PetsModel
 from models.User import UsersModel
-from schemas.petSchema import NewPetSchema, PetOptionsSchema, PetReportSchema, PetSchema, UpdatePetSchema, UpdatePetSchema
-from services.breeds import as_breed_instance
+from schemas.petSchema import NewPetSchema, PetOptionsSchema, PetSchema, UpdatePetSchema, UpdatePetSchema
 from utils.getUser import get_current_user
+from constants import ACTIONS, BREEDS
 
 blueprint = Blueprint('Pets', __name__, description='Operations to manage pets')
 
 # Endpoint to get all pets for a user
 @blueprint.route('/api/pets/<int:user_id>')
-# Will need to add JWT authentication to ensure users can only access their own pets/ authorized actions
 class PetListResource(MethodView):
     @requires_auth
     @blueprint.response(200, PetSchema(many=True))
@@ -65,7 +64,6 @@ class PetListResource(MethodView):
 
 # Endpoint to get, edit, or delete a specific pet by its ID
 @blueprint.route('/api/pet/<int:pet_id>')
-# Will need to add JWT authentication to ensure users can only access their own pets/ authorized actions
 class PetResource(MethodView):
     @requires_auth
     @blueprint.response(200, PetSchema)
@@ -91,8 +89,6 @@ class PetResource(MethodView):
             if pet.UserId != get_current_user().Id:
                 return {'message': 'Unauthorized access to update pet'}, 403
 
-            # Convert to specific breed instance to access breed-specific interact method
-            pet = as_breed_instance(pet)
             # Passed in schema ensures only valid interaction actions are provided
             interact_action = ActionsModel.query.filter_by(Type=pet_data['InteractAction']).first()
             if interact_action:
@@ -131,35 +127,6 @@ class PetResource(MethodView):
                 db.session.rollback()
                 return {'message': f'Error deleting pet: {error}'}, 500
         return {'message': 'Pet not found'}, 404
-
-@blueprint.route('/api/pet-reports/<int:user_id>')
-class PetReportResource(MethodView):
-    # Get a list of all pets and their interactions for reporting purposes from a specific user
-    @requires_auth
-    @blueprint.response(200, PetReportSchema(many=True))
-    def get(self, user_id):
-        """List all pets and their interactions for a user"""
-        user = UsersModel.query.get_or_404(user_id)
-        if user:
-            # Check to make sure user is only accessing their own pets
-            if user.Id != get_current_user().Id:
-                return {'message': 'Unauthorized access to pet reports'}, 403
-            pets = db.session.query(PetsModel).filter_by(UserId=user_id).all()
-            pet_reports = []
-            for pet in pets:
-                interactions = db.session.query(InteractionsModel).filter_by(PetId=pet.Id).all()
-                for interaction in interactions:
-                    report_entry = {
-                        'Id': pet.Id,
-                        'Name': pet.Name,
-                        'When': interaction.When.isoformat(),
-                        'breed': pet.breed,
-                        'action': interaction.action
-                    }
-                    pet_reports.append(report_entry)
-            return pet_reports
-
-        return {'message': 'User not found'}, 404
 
 # Endpoint to grab generic types for breeds/ interactions
 @requires_auth

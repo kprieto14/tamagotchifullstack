@@ -1,7 +1,9 @@
 from marshmallow import Schema, fields, validate
+from constants import BREEDS, ACTIONS
 
-breeds = [ 'Benshis', 'Moomis', 'Pooshis' ]
-actionTypes = [ 'Play', 'Feed', 'Scold', 'Hug', 'Rename' ]
+# Grabs Keys from constants to validate correct information
+breeds = list(BREEDS.keys())
+actionTypes = list(ACTIONS.keys())
 
 # GET requests body validation
 class PlainPetSchema(Schema):
@@ -48,10 +50,3 @@ class PetSchema(PlainPetSchema):
 class PetOptionsSchema(Schema):
     Breeds = fields.List(fields.Nested(PlainBreedSchema), dump_only=True)
     Actions = fields.List(fields.Nested(PlainActionSchema), dump_only=True)
-
-class PetReportSchema(Schema):
-    Id = fields.Integer(dump_only=True)
-    Name = fields.String(dump_only=True)
-    When = fields.String(dump_only=True) # UTC format as string
-    breed = fields.Nested(PlainBreedSchema, dump_only=True)
-    action = fields.Nested(PlainActionSchema, dump_only=True)

@@ -1,5 +1,7 @@
+import random
 from db import db
 from datetime import datetime, timezone
+from constants import BREEDS
 
 class PetsModel(db.Model):
     __tablename__ = 'Pet'
@@ -39,9 +41,34 @@ class PetsModel(db.Model):
     def _rename(self, new_name):
         self.Name = new_name
 
-    # Polymorphism to allow interactions to be overriden and specific by class
-    def interact(self, action):
-        raise NotImplementedError('Breeds must implement this method')
+    def interact(self, action, name=None):
+        breed = BREEDS[self.Type]
+        match action:
+            case 'Play':
+                self._update_happiness(random.randint(1, 10))
+                self._update_friendship(random.randint(1, 5))
+                return f'{self.Name} {breed['Play']}'
+            case 'Feed':
+                self._update_hunger(random.randint(1, 10))
+                self._update_friendship(random.randint(1, 5))
+                self._update_happiness(random.randint(1, 5))
+                return f'{self.Name} {breed['Feed']}'
+            case 'Scold':
+                self._update_happiness(random.randint(-15, -1))
+                self._update_friendship(random.randint(-15, -1))
+                return f'{self.Name} {breed['Scold']}'
+            case 'Hug':
+                self._update_friendship(random.randint(1, 10))
+                self._update_happiness(random.randint(1, 5))
+                return f'{self.Name} {breed['Hug']}'
+            case 'Rename':
+                if name:
+                    old_name = self.Name
+                    self._rename(name)
+                    return f'{old_name} is now known as {self.Name}!'
+                return 'Rename action requires a new name.'
+            case default:
+                return f'{self.Name} looks around confused.'
 
     def __repr__(self):
         return f'''
