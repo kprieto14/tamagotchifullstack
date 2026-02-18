@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { AuthToken, NewPetParams, OptionType, PetItemType, PetReportType, UpdatePetParams } from '../types';
+import type { AuthToken, NewPetParams, OptionType, PetItemType, UpdatePetParams } from '../types';
 
 const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -18,17 +18,6 @@ function petApi() {
             }
 
             throw new Error('Failed to load Pets');
-        },
-        getPetsReport: async (userId: number, token?: AuthToken): Promise<PetReportType[]> => {
-            const getPetStats = await axios.get(`${baseURL}/pet-reports/${userId}`, {
-                headers: withAuth(token),
-            })
-
-            if (getPetStats.status === 200) {
-                return getPetStats.data
-            }
-
-            throw new Error('Failed to load pets report details')
         },
         // This grabs a single pet
         getPet: async (petId: number, token?: AuthToken): Promise<PetItemType> => {

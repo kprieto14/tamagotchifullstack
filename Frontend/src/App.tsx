@@ -9,7 +9,6 @@ import { Nav } from './components/Nav'
 import PageTitle from './components/PageTitle';
 import CallbackPage from './pages/CallbackPage';
 import { useUserId } from './hooks/useUserId';
-import { ViewPetReport } from './pages/ViewPetHistory';
 
 export function App() {
   const { isAuthenticated, isLoading, error } = useAuth0();
@@ -45,7 +44,6 @@ export function App() {
             <Routes>
               <Route path='/' element={<PetList />} />
               <Route path='/new' element={<NewPetPage />} />
-              <Route path='/report' element={<ViewPetReport />}/>
               <Route path='/items/:id' element={<PetItemPage />}/>
               <Route path='/items/delete/:id' element={<GoodbyePetItemPage />}/>
               <Route path='/callback' element={<CallbackPage />}/>

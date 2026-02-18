@@ -32,23 +32,6 @@
     * Delete data: Remove pets and automatically cascade-delete their interactions.
     * All database access is done via SQLAlchemy and environment-based connection strings, no raw queries with string concatenation, reducing the risk of SQL injection.
 
-## Ability to generate reports with multiple columns, multiple rows, date-time stamps, and title
-  ### Location (backend/frontend):
-  * Backend report endpoint (e.g., GET /api/pet-reports/<user_id>)
-  * Frontend report page (e.g., frontend/src/pages/ViewPetHistory.tsx)
-  ### How it’s implemented:
-    #### The backend exposes a report endpoint that joins Pets, Breeds, Actions, and Interactions to produce a structured dataset including:
-    * Pet ID
-    * Pet Name
-    * Breed
-    * Action
-    * Interaction Date/Time (PerformedAt)
-    #### The frontend displays this report as a table with:
-    * Multiple columns (pet name, breed, action, timestamp, etc.)
-    * Multiple rows (one per interaction)
-    * A title such as “All Pets Interaction Report” at the top of the page.
-    * Each row includes a timestamp column (date-time stamp), satisfying the reporting requirement.
-
 ## Validation functionality
   ### Location (backend/frontend):
   * Backend: request validation via schemas and logic (e.g., Marshmallow schemas for pets/interactions, schemas are located in schemas/petSchema and schemas/userSchema)
