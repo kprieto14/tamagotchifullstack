@@ -1,7 +1,7 @@
 import random
+from utils.ConfigCache import ConfigCache
 from db import db
 from datetime import datetime, timezone
-from constants import BREEDS
 
 class PetsModel(db.Model):
     __tablename__ = 'Pet'
@@ -42,25 +42,25 @@ class PetsModel(db.Model):
         self.Name = new_name
 
     def interact(self, action, name=None):
-        breed = BREEDS[self.Type]
+        behaviors = ConfigCache.getInfo('Behaviors')[self.breed.Type]
         match action:
             case 'Play':
                 self._update_happiness(random.randint(1, 10))
                 self._update_friendship(random.randint(1, 5))
-                return f'{self.Name} {breed['Play']}'
+                return f'{self.Name} {behaviors['Play']}'
             case 'Feed':
                 self._update_hunger(random.randint(1, 10))
                 self._update_friendship(random.randint(1, 5))
                 self._update_happiness(random.randint(1, 5))
-                return f'{self.Name} {breed['Feed']}'
+                return f'{self.Name} {behaviors['Feed']}'
             case 'Scold':
                 self._update_happiness(random.randint(-15, -1))
                 self._update_friendship(random.randint(-15, -1))
-                return f'{self.Name} {breed['Scold']}'
+                return f'{self.Name} {behaviors['Scold']}'
             case 'Hug':
                 self._update_friendship(random.randint(1, 10))
                 self._update_happiness(random.randint(1, 5))
-                return f'{self.Name} {breed['Hug']}'
+                return f'{self.Name} {behaviors['Hug']}'
             case 'Rename':
                 if name:
                     old_name = self.Name

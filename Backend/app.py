@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from utils.ConfigCache import ConfigCache
 from utils.auth0 import register_auth_error_handlers
 from utils.database import configure_database
 from utils.api import configure_api_settings
@@ -18,6 +19,9 @@ def create_app():
 
     # Initialize components
     migrate = configure_database(app)
+    # with app.app_context():
+    #     # Create cache for breeds/ behaviors/ actions
+    #     ConfigCache.loadBreedInfo()
     api = configure_api_settings(app)
 
     # Register Auth0 error handler

@@ -1,5 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
+from utils.ConfigCache import ConfigCache
 from utils.auth0 import requires_auth
 from db import db
 from models.Action import ActionsModel
@@ -9,7 +10,6 @@ from models.Pet import PetsModel
 from models.User import UsersModel
 from schemas.petSchema import NewPetSchema, PetOptionsSchema, PetSchema, UpdatePetSchema, UpdatePetSchema
 from utils.getUser import get_current_user
-from constants import ACTIONS, BREEDS
 
 blueprint = Blueprint('Pets', __name__, description='Operations to manage pets')
 
@@ -135,9 +135,7 @@ class TypeListResource(MethodView):
     @blueprint.response(200, PetOptionsSchema)
     def get(self):
         """Get all types for breeds and interactions"""
-        breeds = BreedsModel.query.all()
-        actions = ActionsModel.query.all()
         return {
-            'Breeds': breeds,
-            'Actions': actions
+            'Breeds': ConfigCache.getInfo('Breeds'),
+            'Actions': ConfigCache.getInfo('Actions')
         }

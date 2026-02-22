@@ -4,16 +4,16 @@ from db import db
 class BreedsModel(db.Model):
     __tablename__ = 'Breed'
     Id = db.Column(db.Integer, primary_key=True)
-    Type = db.Column(db.String, nullable=False)
+    Type = db.Column(db.String, nullable=False, unique=True)
     # Benshis, Moomis, Pooshis
 
     # Relationships
     pets = db.relationship('PetsModel', back_populates='breed', cascade='all, delete')
+    behaviors = db.relationship('BehaviorsModel', back_populates='breed', cascade='all, delete')
 
     def __repr__(self):
         return f'''
             <
                 \n id: {self.Id}
                 \n type: {self.Type}
-            >
-        '''
+            >'''
