@@ -14,6 +14,6 @@ class ActionsModel(db.Model):
     def __repr__(self):
         return f'''
             <
-                \n id: {self.Id}
-                \n name: {self.Type}
+                \n Id: {self.Id}
+                \n Type: {self.Type}
             >'''

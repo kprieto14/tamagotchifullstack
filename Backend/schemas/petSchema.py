@@ -17,27 +17,29 @@ class PlainActionSchema(Schema):
     Type = fields.String(required=True)
 
     @validates('Type')
-    def validate_type(self, value):
+    def validate_type(self, value, **kwarg):
         actions = ConfigCache.getInfo('Actions') 
-        action = actions.get(value, None)
-        if not action:
-            raise ValidationError('Invalid actions type.')
+        for action in actions:
+            if action.Type == value:
+                return
+        raise ValidationError('Invalid actions type.')
 
 class PlainBreedSchema(Schema):
     Id = fields.Integer(dump_only=True)
     Type = fields.String(required=True)
 
-    @validates("Type")
-    def validate_type(self, value):
+    @validates("BreedType")
+    def validate_type(self, value, **kwargs):
         breeds = ConfigCache.getInfo('Breeds')
-        breed = breeds.get(value, None)
-        if value not in breed:
-            raise ValidationError("Invalid breed type.")
+        for breed in breeds:
+            if breed.Type == value:
+                return
+        raise ValidationError("Invalid breed type.")
 
 class PlainPetUserSchema(Schema):
     Id = fields.Integer(dump_only=True)
     Username = fields.String(required=True)
-    AuthSubject = fields.String(required=True)
+    AuthSubject = fields.String(required=True, load_only=True)
 
 # POST schema requests validation
 class NewPetSchema(Schema):
@@ -46,23 +48,25 @@ class NewPetSchema(Schema):
     BreedType = fields.String(required = True)
 
     @validates("BreedType")
-    def validate_type(self, value):
+    def validate_type(self, value, **kwargs):
         breeds = ConfigCache.getInfo('Breeds')
-        breed = breeds.get(value, None)
-        if value not in breed:
-            raise ValidationError("Invalid breed type.")
+        for breed in breeds:
+            if breed.Type == value:
+                return
+        raise ValidationError("Invalid breed type.")
 
 # PUT schema requests validation
 class UpdatePetSchema(Schema):
     Name = fields.String(required=False)
     InteractAction = fields.String(required=True, allow_none=True)
 
-    @validates("Type")
-    def validate_type(self, value):
-        actions = ConfigCache.getInfo('Actions')
-        action = actions.get(value, None)
-        if not action:
-            raise ValidationError('Invalid actions type.')
+    @validates('InteractAction')
+    def validate_type(self, value, **kwargs):
+        actions = ConfigCache.getInfo('Actions') 
+        for action in actions:
+            if action.Type == value:
+                return
+        raise ValidationError('Invalid actions type.')
 
 # GET schema response formatting, ignore BreedType as it's only for POST request validation
 class PetSchema(PlainPetSchema):
