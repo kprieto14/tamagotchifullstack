@@ -12,14 +12,6 @@ export type PetItemType = {
     message?: string
 }
 
-export type PetReportType = {
-    Id: number
-    Name: string
-    breed: BreedType
-    action: ActionType
-    When: Date
-}
-
 export type BreedType = {
     Id: number
     Type: 'Benshis' | 'Moomis' | 'Pooshis'

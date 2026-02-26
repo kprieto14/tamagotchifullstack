@@ -110,7 +110,7 @@ export function PetList() {
 
             <div className='search'>
                 {/* Search bar */}
-                <div className='pt-2'>
+                <div className='me-3 pt-2'>
                     <Form.Label className='pe-2'>Search by Pet Name:</Form.Label>
                     <input type='text' name= 'Name' onChange={e => handleSearchPets(e)} value={searchTerm}/> 
                 </div>
@@ -161,11 +161,8 @@ export function PetList() {
             </main>
 
             <div>
-                <Link to={'/new'} className='me-4'>
+                <Link to={'/new'}>
                     <button type='button' className='solid-button alt-solid me-3'>Make a New Pet</button>
-                </Link>
-                <Link to={'/report'}>
-                    <button type='button' className='outline-button'>View Pets Report</button>
                 </Link>
             </div>
         </div>
